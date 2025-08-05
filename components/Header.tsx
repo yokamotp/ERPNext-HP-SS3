@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Phone, Home, Building2, Boxes, Handshake, IdCard, BookOpen, Menu, X } from 'lucide-react';
+import { Phone, Home, Building2, Boxes, Handshake, IdCard, BookOpen, Menu, X, Mail } from 'lucide-react';
 
 export default function Header() {
   const pathname = usePathname();
@@ -57,16 +57,12 @@ export default function Header() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-gray-900">MyHatch</h1>
-              <p className="text-xs text-gray-600">ERPNext導入支援</p>
+              <p className="text-xs text-gray-600">やってやるぜ！を全力応援</p>
             </div>
           </div>
 
           {/* Desktop Contact Info */}
           <div className="hidden lg:flex items-center space-x-4 text-sm text-gray-600">
-            <div className="flex items-center space-x-2">
-              <Phone className="w-4 h-4" />
-              <span className="font-medium">03-1234-5678</span>
-            </div>
             <div className="text-xs">
               平日 9:00-18:00
             </div>
@@ -148,8 +144,13 @@ export default function Header() {
               <div className="mt-6 pt-4 border-t border-gray-200">
                 <div className="px-4 py-2 text-sm text-gray-600">
                   <div className="flex items-center space-x-2 mb-1">
-                    <Phone className="w-4 h-4" />
-                    <span className="font-medium">03-1234-5678</span>
+                    <Mail className="w-4 h-4" />
+                    <a
+                      href="mailto:yohei.okamoto@gmail.com"
+                      className="font-medium text-blue-600 hover:underline"
+                    >
+                      yohei.okamoto@gmail.com
+                    </a>
                   </div>
                   <div className="text-xs ml-6">平日 9:00-18:00</div>
                 </div>
