@@ -25,13 +25,17 @@ export default function Header() {
     setIsMobileMenuOpen(false);
   };
 
+  const YenIcon = () => (
+    <span style={{ fontSize: '1.2em', fontWeight: 'bold' }}>￥</span>
+  );
+
   const navigationItems = [
     { href: '/', label: 'ホーム', icon: Home },
     { href: '/company', label: '会社案内', icon: Building2 },
     { href: '/erpnext', label: 'ERPNext', icon: Grid3X3 },
     { href: '/crm', label: 'CRM', icon: Users },
     { href: '/hr-payroll', label: 'HR', icon: Users },
-    { href: '/pricing', label: '価格', icon: Yen },
+    { href: '/pricing', label: '価格', icon: YenIcon },
     { href: '/knowledge', label: 'ナレッジ記事', icon: BookOpen },
   ];
 
@@ -92,11 +96,10 @@ export default function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`nav-link flex items-center space-x-2 transition-colors duration-200 ${
-                    isActive(item.href)
-                      ? 'text-orange-600 font-semibold border-b-2 border-orange-500 pb-1'
-                      : 'text-gray-600 hover:text-orange-500'
-                  }`}
+                  className={`nav-link flex items-center space-x-2 transition-colors duration-200 ${isActive(item.href)
+                    ? 'text-orange-600 font-semibold border-b-2 border-orange-500 pb-1'
+                    : 'text-gray-600 hover:text-orange-500'
+                    }`}
                 >
                   <item.icon className="w-4 h-4 stroke-2" />
                   {item.href === '/' ? (
@@ -130,11 +133,10 @@ export default function Header() {
                     key={item.href}
                     href={item.href}
                     onClick={closeMobileMenu}
-                    className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                      isActive(item.href)
-                        ? 'bg-orange-50 text-orange-600 font-semibold'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-orange-500'
-                    }`}
+                    className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${isActive(item.href)
+                      ? 'bg-orange-50 text-orange-600 font-semibold'
+                      : 'text-gray-600 hover:bg-gray-50 hover:text-orange-500'
+                      }`}
                   >
                     <item.icon className="w-5 h-5 stroke-2" />
                     <span className="font-medium">{item.label}</span>
