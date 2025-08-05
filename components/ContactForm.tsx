@@ -31,7 +31,7 @@ export default function ContactForm() {
 
   const requestOptions = [
     "資料をメールで送ってほしい",
-    "資料を郵送してほしい", 
+    "資料を郵送してほしい",
     "メールで相談したい",
     "電話 or Webミーティングを希望"
   ];
@@ -56,7 +56,7 @@ export default function ContactForm() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    
+
     // Clear error when user starts typing
     if (errors[name as keyof FormErrors]) {
       setErrors(prev => ({ ...prev, [name]: undefined }));
@@ -74,7 +74,7 @@ export default function ContactForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -135,15 +135,6 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">
-          お問い合わせ・資料請求フォーム
-        </h3>
-        <p className="text-gray-600">
-          必要事項をご入力の上、送信ボタンをクリックしてください
-        </p>
-      </div>
-
       {/* お名前 */}
       <div>
         <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-2">
@@ -155,9 +146,8 @@ export default function ContactForm() {
           name="name"
           value={formData.name}
           onChange={handleInputChange}
-          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors ${
-            errors.name ? 'border-red-500' : 'border-gray-300'
-          }`}
+          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors ${errors.name ? 'border-red-500' : 'border-gray-300'
+            }`}
           aria-describedby={errors.name ? 'name-error' : undefined}
         />
         {errors.name && (
@@ -180,9 +170,8 @@ export default function ContactForm() {
           value={formData.email}
           onChange={handleInputChange}
           placeholder="例：example@company.com"
-          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors ${
-            errors.email ? 'border-red-500' : 'border-gray-300'
-          }`}
+          className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors ${errors.email ? 'border-red-500' : 'border-gray-300'
+            }`}
           aria-describedby={errors.email ? 'email-error' : undefined}
         />
         {errors.email && (
