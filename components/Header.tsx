@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Phone, Home, Building2, Grid3X3, Users, DollarSign as Yen, BookOpen, Menu, X } from 'lucide-react';
+import { Phone, Home, Building2, Boxes, Handshake, IdCard, BookOpen, Menu, X } from 'lucide-react';
 
 export default function Header() {
   const pathname = usePathname();
@@ -32,9 +32,9 @@ export default function Header() {
   const navigationItems = [
     { href: '/', label: 'ホーム', icon: Home },
     { href: '/company', label: '会社案内', icon: Building2 },
-    { href: '/erpnext', label: 'ERPNext', icon: Grid3X3 },
-    { href: '/crm', label: 'CRM', icon: Users },
-    { href: '/hr-payroll', label: 'HR', icon: Users },
+    { href: '/erpnext', label: 'ERPNext', icon: Boxes },
+    { href: '/crm', label: 'CRM', icon: Handshake },
+    { href: '/hr-payroll', label: 'HR', icon: IdCard },
     { href: '/pricing', label: '価格', icon: YenIcon },
     { href: '/knowledge', label: 'ナレッジ記事', icon: BookOpen },
   ];
