@@ -9,7 +9,6 @@ interface ComparisonItem {
     value: string;
     status: 'good' | 'bad' | 'neutral';
     tooltip?: boolean;
-    tooltip?: boolean;
   };
   competitor: {
     value: string;
@@ -221,11 +220,10 @@ export default function ERPComparisonTabs() {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-6 py-4 text-sm font-medium whitespace-nowrap transition-colors ${
-                activeTab === tab
+              className={`px-6 py-4 text-sm font-medium whitespace-nowrap transition-colors ${activeTab === tab
                   ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              }`}
+                }`}
               role="tab"
               aria-selected={activeTab === tab}
               aria-controls={`panel-${tab}`}
