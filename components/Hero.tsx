@@ -1,7 +1,21 @@
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
 import { Play } from 'lucide-react';
+import DemoModal from './DemoModal';
 
 export default function Hero() {
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+
+  const openDemoModal = () => {
+    setIsDemoModalOpen(true);
+  };
+
+  const closeDemoModal = () => {
+    setIsDemoModalOpen(false);
+  };
+
   return (
     <section className="bg-gradient-to-br from-trust-blue via-white to-trust-blue-dark py-16 lg:py-24">
       <div className="container-width section-padding">
@@ -19,7 +33,7 @@ export default function Hero() {
                 本物のERP体験を、無料で。
               </p>
             </div>
-            
+
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/consultation" className="cta-primary inline-flex items-center justify-center text-lg">
                 無料相談・デモ検証を申し込む
@@ -28,6 +42,26 @@ export default function Hero() {
                 <Play className="w-5 h-5" />
                 <span>1分でわかる操作デモ</span>
               </Link>
+            </div>
+
+            {/* 今すぐ体験ボタンと補助文 */}
+            <div className="flex flex-col items-start">
+              <button
+                type="button"
+                data-testid="open-demo-modal"
+                aria-haspopup="dialog"
+                aria-label="今すぐ体験 — デモ環境を1分で開始"
+                onClick={openDemoModal}
+                className="inline-flex items-center gap-3 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold text-lg px-6 py-3 rounded-xl shadow-lg transform transition-transform duration-150 hover:scale-[1.03] focus:outline-none focus:ring-4 focus:ring-orange-200"
+              >
+                <Play className="w-5 h-5" />
+                <span>今すぐ体験</span>
+              </button>
+
+              {/* 補助文 */}
+              <p className="text-xs text-gray-600 mt-2">
+                アカウント発行は1分で完了。無料でご利用いただけます。
+              </p>
             </div>
 
             <div className="pt-4 border-t border-gray-200">
@@ -69,6 +103,9 @@ export default function Hero() {
           </div>
         </div>
       </div>
+
+      {/* デモモーダル */}
+      <DemoModal isOpen={isDemoModalOpen} onClose={closeDemoModal} />
     </section>
   );
 }
