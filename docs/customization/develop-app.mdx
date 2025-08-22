@@ -1,0 +1,475 @@
+---
+title: アプリを開発する
+description: ERPNext でのカスタムアプリ開発について詳しく解説
+---
+
+# アプリを開発する
+
+## 概要
+
+ERPNext は Frappe Framework をベースとしており、カスタムアプリの開発が可能です。自社の業務に特化したアプリを作成することで、より効率的な業務システムを構築できます。
+
+## 🚀 開発環境の準備
+
+### 1. 必要なツール
+- **Python 3.8+**: プログラミング言語
+- **Node.js 14+**: フロントエンド開発
+- **Git**: バージョン管理
+- **VS Code**: 推奨エディタ
+- **Frappe Bench**: 開発環境管理ツール
+
+### 2. Frappe Bench のインストール
+```bash
+# Frappe Bench のインストール
+sudo pip3 install frappe-bench
+
+# 新しいベンチの作成
+bench init my-bench
+cd my-bench
+
+# ERPNext のインストール
+bench get-app erpnext
+bench install-app erpnext
+```
+
+### 3. 開発用サイトの作成
+```bash
+# 開発用サイトの作成
+bench new-site dev.localhost
+bench --site dev.localhost add-to-hosts
+
+# アプリのインストール
+bench --site dev.localhost install-app erpnext
+```
+
+## 📱 カスタムアプリの作成
+
+### 1. アプリの初期化
+```bash
+# カスタムアプリの作成
+bench new-app my_custom_app
+
+# アプリの構造
+my_custom_app/
+├── my_custom_app/
+│   ├── __init__.py
+│   ├── config/
+│   ├── modules/
+│   ├── public/
+│   └── templates/
+├── setup.py
+└── requirements.txt
+```
+
+### 2. 基本的なアプリ構造
+```python
+# my_custom_app/__init__.py
+from frappe import _
+
+def get_data():
+    return [
+        {
+            "module_name": "My Custom App",
+            "color": "grey",
+            "icon": "octicon octicon-file-directory",
+            "type": "module",
+            "label": _("My Custom App")
+        }
+    ]
+```
+
+## 🗄️ DocType の作成
+
+### 1. DocType の定義
+```python
+# my_custom_app/modules/custom_module/custom_doctype.py
+import frappe
+from frappe.model.document import Document
+
+class CustomDocType(Document):
+    def validate(self):
+        # バリデーション処理
+        if self.amount < 0:
+            frappe.throw("金額は0以上である必要があります")
+    
+    def on_submit(self):
+        # 送信時の処理
+        self.create_journal_entry()
+    
+    def create_journal_entry(self):
+        # 仕訳の作成
+        pass
+```
+
+### 2. DocType の設定
+```json
+// my_custom_app/modules/custom_module/custom_doctype.json
+{
+    "name": "Custom DocType",
+    "doctype": "DocType",
+    "module": "My Custom App",
+    "custom": 1,
+    "fields": [
+        {
+            "fieldname": "customer",
+            "label": "顧客",
+            "fieldtype": "Link",
+            "options": "Customer",
+            "reqd": 1
+        },
+        {
+            "fieldname": "amount",
+            "label": "金額",
+            "fieldtype": "Currency",
+            "reqd": 1
+        },
+        {
+            "fieldname": "description",
+            "label": "説明",
+            "fieldtype": "Text"
+        }
+    ]
+}
+```
+
+## 🎨 フロントエンドの開発
+
+### 1. JavaScript ファイル
+```javascript
+// my_custom_app/public/js/custom_doctype.js
+frappe.ui.form.on('Custom DocType', {
+    refresh: function(frm) {
+        // フォームの更新時
+        frm.add_custom_button('特別処理', function() {
+            // カスタムボタンの処理
+            frappe.msgprint('特別処理を実行しました');
+        });
+    },
+    
+    customer: function(frm) {
+        // 顧客フィールドの変更時
+        if (frm.doc.customer) {
+            frappe.call({
+                method: 'my_custom_app.api.get_customer_info',
+                args: { customer: frm.doc.customer },
+                callback: function(r) {
+                    if (r.message) {
+                        frm.set_value('description', r.message.description);
+                    }
+                }
+            });
+        }
+    }
+});
+```
+
+### 2. CSS ファイル
+```css
+/* my_custom_app/public/css/custom_doctype.css */
+.custom-field {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 8px;
+}
+
+.custom-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.custom-button:hover {
+    background-color: #0056b3;
+}
+```
+
+## 🔌 API の開発
+
+### 1. サーバーサイド API
+```python
+# my_custom_app/api.py
+import frappe
+from frappe import _
+
+@frappe.whitelist()
+def get_customer_info(customer):
+    """顧客情報を取得するAPI"""
+    try:
+        customer_doc = frappe.get_doc("Customer", customer)
+        return {
+            "customer_name": customer_doc.customer_name,
+            "description": customer_doc.customer_details,
+            "credit_limit": customer_doc.credit_limit
+        }
+    except frappe.DoesNotExistError:
+        frappe.throw(_("顧客が見つかりません"))
+    except Exception as e:
+        frappe.log_error(f"顧客情報取得エラー: {str(e)}")
+        frappe.throw(_("顧客情報の取得に失敗しました"))
+
+@frappe.whitelist()
+def create_custom_record(customer, amount, description):
+    """カスタムレコードを作成するAPI"""
+    try:
+        doc = frappe.new_doc("Custom DocType")
+        doc.customer = customer
+        doc.amount = amount
+        doc.description = description
+        doc.insert()
+        
+        return {
+            "status": "success",
+            "message": "レコードが正常に作成されました",
+            "name": doc.name
+        }
+    except Exception as e:
+        frappe.log_error(f"レコード作成エラー: {str(e)}")
+        frappe.throw(_("レコードの作成に失敗しました"))
+```
+
+### 2. クライアントサイド API 呼び出し
+```javascript
+// API の呼び出し例
+frappe.call({
+    method: 'my_custom_app.api.create_custom_record',
+    args: {
+        customer: 'CUST-001',
+        amount: 10000,
+        description: 'テスト用レコード'
+    },
+    callback: function(r) {
+        if (r.message.status === 'success') {
+            frappe.msgprint(r.message.message);
+            // フォームの更新
+            cur_frm.reload_doc();
+        }
+    }
+});
+```
+
+## 📊 レポートの開発
+
+### 1. カスタムレポート
+```python
+# my_custom_app/report/custom_report/custom_report.py
+from __future__ import unicode_literals
+import frappe
+from frappe import _
+
+def execute(filters=None):
+    columns = get_columns()
+    data = get_data(filters)
+    return columns, data
+
+def get_columns():
+    return [
+        {
+            "fieldname": "customer",
+            "label": _("顧客"),
+            "fieldtype": "Link",
+            "options": "Customer",
+            "width": 150
+        },
+        {
+            "fieldname": "amount",
+            "label": _("金額"),
+            "fieldtype": "Currency",
+            "width": 120
+        },
+        {
+            "fieldname": "description",
+            "label": _("説明"),
+            "fieldtype": "Data",
+            "width": 200
+        }
+    ]
+
+def get_data(filters):
+    conditions = []
+    if filters.get("customer"):
+        conditions.append("customer = '{0}'".format(filters.get("customer")))
+    
+    where_clause = " WHERE " + " AND ".join(conditions) if conditions else ""
+    
+    return frappe.db.sql("""
+        SELECT customer, amount, description
+        FROM `tabCustom DocType`
+        {where_clause}
+        ORDER BY creation DESC
+    """.format(where_clause=where_clause), as_dict=1)
+```
+
+### 2. レポートの登録
+```json
+// my_custom_app/report/custom_report/custom_report.json
+{
+    "name": "Custom Report",
+    "report_type": "Script Report",
+    "module": "My Custom App",
+    "doctype": "Report",
+    "custom": 1,
+    "is_standard": "No",
+    "script": "my_custom_app.report.custom_report.custom_report.execute"
+}
+```
+
+## 🔧 ワークフローの開発
+
+### 1. ワークフローの定義
+```json
+// my_custom_app/workflows/custom_workflow.json
+{
+    "name": "Custom Workflow",
+    "document_type": "Custom DocType",
+    "is_active": 1,
+    "workflow_name": "Custom Workflow",
+    "workflow_states": [
+        {
+            "state": "Draft",
+            "doc_status": 0,
+            "allow_edit": "Owner"
+        },
+        {
+            "state": "Submitted",
+            "doc_status": 1,
+            "allow_edit": "Owner"
+        },
+        {
+            "state": "Approved",
+            "doc_status": 1,
+            "allow_edit": "Owner"
+        }
+    ],
+    "workflow_transitions": [
+        {
+            "state": "Draft",
+            "action": "Submit",
+            "next_state": "Submitted",
+            "allowed": "Owner"
+        },
+        {
+            "state": "Submitted",
+            "action": "Approve",
+            "next_state": "Approved",
+            "allowed": "System Manager"
+        }
+    ]
+}
+```
+
+## 🧪 テストの作成
+
+### 1. ユニットテスト
+```python
+# my_custom_app/tests/test_custom_doctype.py
+import frappe
+import unittest
+from my_custom_app.modules.custom_module.custom_doctype import CustomDocType
+
+class TestCustomDocType(unittest.TestCase):
+    def setUp(self):
+        frappe.set_user("Administrator")
+    
+    def test_custom_doctype_creation(self):
+        doc = frappe.new_doc("Custom DocType")
+        doc.customer = "CUST-001"
+        doc.amount = 10000
+        doc.description = "テスト用"
+        
+        doc.insert()
+        self.assertIsNotNone(doc.name)
+        
+        # クリーンアップ
+        doc.delete()
+    
+    def test_validation(self):
+        doc = frappe.new_doc("Custom DocType")
+        doc.customer = "CUST-001"
+        doc.amount = -1000  # 負の値
+        
+        with self.assertRaises(frappe.ValidationError):
+            doc.insert()
+```
+
+### 2. テストの実行
+```bash
+# テストの実行
+bench --site dev.localhost run-tests --module my_custom_app
+
+# 特定のテストファイルの実行
+bench --site dev.localhost run-tests --module my_custom_app.tests.test_custom_doctype
+```
+
+## 📦 アプリのパッケージ化
+
+### 1. アプリのインストール
+```bash
+# アプリのインストール
+bench --site dev.localhost install-app my_custom_app
+
+# アプリの有効化
+bench --site dev.localhost migrate
+```
+
+### 2. アプリの配布
+```bash
+# アプリのパッケージ化
+bench build --app my_custom_app
+
+# 配布用ファイルの作成
+bench --site dev.localhost export-app my_custom_app
+```
+
+## 🎯 開発のベストプラクティス
+
+### 1. コーディング規約
+- **命名規則**: 一貫した命名規則の使用
+- **ドキュメント**: 適切なコメントとドキュメント
+- **エラーハンドリング**: 適切なエラー処理
+- **ログ出力**: デバッグ用のログ出力
+
+### 2. セキュリティ
+- **権限チェック**: 適切な権限チェック
+- **入力検証**: ユーザー入力の検証
+- **SQLインジェクション**: 安全なSQLクエリ
+- **XSS対策**: クロスサイトスクリプティング対策
+
+### 3. パフォーマンス
+- **データベース最適化**: 効率的なクエリ
+- **キャッシュ活用**: 適切なキャッシュ戦略
+- **非同期処理**: 重い処理の非同期化
+
+## 📚 学習リソース
+
+### 1. 公式ドキュメント
+- [Frappe Framework Documentation](https://frappeframework.com/docs)
+- [ERPNext Developer Documentation](https://docs.erpnext.com/docs/v14/developer)
+
+### 2. コミュニティ
+- [Frappe Forum](https://discuss.frappe.io)
+- [ERPNext Forum](https://discuss.erpnext.com)
+- [GitHub](https://github.com/frappe)
+
+### 3. サンプルコード
+- [ERPNext Apps](https://github.com/frappe/erpnext)
+- [Frappe Apps](https://github.com/frappe)
+
+## 🎯 次のステップ
+
+アプリ開発の基本を理解できたら、次のステップに進みましょう：
+
+1. **[基本的な操作方法](/knowledge/basic-operations)** - ERPNext の基本操作
+2. **[チュートリアル](/knowledge/tutorial)** - 実践的な学習コンテンツ
+3. **[導入](/knowledge/implementation)** - 導入プロセスの詳細
+
+## 📞 サポート・お問い合わせ
+
+アプリ開発でお困りの場合は、お気軽にお問い合わせください。
+
+---
+
+**関連リンク**: [カスタマイズ](/knowledge/customization) | [ERPNextとは？](/knowledge/erpnext)
