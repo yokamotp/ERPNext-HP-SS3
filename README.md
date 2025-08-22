@@ -20,6 +20,14 @@ NOTION_DATABASE_ID=your_notion_database_id_here
 
 # Next.js Configuration
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# Contact Form API Configuration
+RECAPTCHA_SECRET=your_recaptcha_secret_key_here
+RECAPTCHA_BYPASS=true
+
+# SendGrid Configuration
+SENDGRID_API_KEY=your_sendgrid_api_key_here
+CONTACT_RECIPIENT=your_email@example.com
 ```
 
 ### Notion API設定手順
@@ -46,6 +54,20 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 3. **Integration の共有**
    - データベースページで "Share" をクリック
    - 作成したIntegrationを追加
+
+### Contact Form API設定手順
+
+1. **reCAPTCHA v3 の設定**
+   - [Google reCAPTCHA](https://www.google.com/recaptcha/admin) にアクセス
+   - "reCAPTCHA v3" を選択してサイトを登録
+   - 取得したシークレットキーを `RECAPTCHA_SECRET` に設定
+   - 開発時は `RECAPTCHA_BYPASS=true` でバイパス可能
+
+2. **SendGrid の設定**
+   - [SendGrid](https://sendgrid.com/) でアカウント作成
+   - APIキーを生成し、`SENDGRID_API_KEY` に設定
+   - 送信先メールアドレスを `CONTACT_RECIPIENT` に設定
+   - 送信元メールアドレス（noreply@myhatch.jp）のドメイン認証が必要
 
 ## 🛠️ 開発環境のセットアップ
 
