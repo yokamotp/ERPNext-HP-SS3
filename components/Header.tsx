@@ -31,10 +31,10 @@ export default function Header() {
 
   const navigationItems = [
     { href: '/', label: 'ホーム', icon: Home },
-    { href: '/company', label: '会社案内', icon: Building2 },
     { href: '/erpnext', label: 'ERPNext', icon: Boxes },
-    { href: '/pricing', label: '価格', icon: YenIcon },
     { href: '/knowledge', label: 'ドキュメント', icon: BookOpen },
+    { href: '/pricing', label: '価格', icon: YenIcon },
+    { href: '/company', label: '会社案内', icon: Building2 },
   ];
 
   return (
