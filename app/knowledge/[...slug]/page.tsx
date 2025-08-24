@@ -3,6 +3,7 @@ import { getMDXArticleBySlug, getAllMDXSlugs, getMDXArticles } from '@/lib/mdx';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import KnowledgeSidebar from '@/components/KnowledgeSidebar';
+import TableOfContents from '@/components/TableOfContents';
 import Link from 'next/link';
 import {
   ArrowLeft,
@@ -311,13 +312,10 @@ export default async function ArticlePage({ params }: Props) {
           </section>
         </main>
 
-        {/* Right Sidebar - Table of Contents (Placeholder for now) */}
+        {/* Right Sidebar - Table of Contents */}
         <div className="w-full xl:w-80 xl:flex-shrink-0 hidden xl:block">
           <div className="xl:sticky xl:top-24 xl:h-[calc(100vh-6rem)] xl:overflow-y-auto">
-            <div className="bg-white border-l border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900">目次</h3>
-              <p className="text-sm text-gray-600 mt-2">右サイドバー（目次）は後で実装予定</p>
-            </div>
+            <TableOfContents />
           </div>
         </div>
       </div>
