@@ -1,11 +1,10 @@
 # ERPNext-HP3-SSG-v2
 
-Next.js 14 + Notion API + Tailwind CSS を使用したSSG（静的サイト生成）構成のナレッジサイトです。
+Next.js 15 + Tailwind CSS を使用したSSG（静的サイト生成）構成のナレッジサイトです。
 
 ## 🚀 特徴
 
 - **SSG構成**: 全ページが静的HTMLとして生成され、SEOに最適化
-- **Notion CMS**: 記事データはNotion APIから自動取得
 - **高速表示**: プリレンダリングされたHTMLで高速な表示を実現
 - **SEO対応**: メタデータ、OGP、構造化データに対応
 
@@ -14,9 +13,6 @@ Next.js 14 + Notion API + Tailwind CSS を使用したSSG（静的サイト生�
 `.env.local` ファイルを作成し、以下の環境変数を設定してください：
 
 ```env
-# Notion API Configuration
-NOTION_SECRET_KEY=your_notion_secret_key_here
-NOTION_DATABASE_ID=your_notion_database_id_here
 
 # Next.js Configuration
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
@@ -29,27 +25,6 @@ RECAPTCHA_BYPASS=true
 SENDGRID_API_KEY=your_sendgrid_api_key_here
 CONTACT_RECIPIENT=your_email@example.com
 ```
-
-### Notion API設定手順
-
-1. **Notion Integration の作成**
-   - [Notion Developers](https://developers.notion.com/) にアクセス
-   - "New integration" をクリック
-   - 適切な権限を設定（Read content が必要）
-
-2. **Database の設定**
-   - Notionでデータベースを作成
-   - 以下のプロパティを設定：
-     - `Title` (Title)
-     - `Slug` (Text)
-     - `Excerpt` (Text)
-     - `Category` (Select)
-     - `Tags` (Multi-select)
-     - `ReadTime` (Text)
-     - `PublishDate` (Date)
-     - `Status` (Select: Draft, Published)
-     - `IsPopular` (Checkbox)
-     - `IsRecommended` (Checkbox)
 
 3. **Integration の共有**
    - データベースページで "Share" をクリック
@@ -102,25 +77,21 @@ npm start
 │   ├── Header.tsx
 │   ├── Footer.tsx
 │   └── ...
-├── lib/
-│   └── notion.ts             # Notion API ユーティリティ
 └── ...
 ```
 
 ## 🔧 技術スタック
 
 - **Framework**: Next.js 14 (App Router)
-- **CMS**: Notion API
 - **Styling**: Tailwind CSS
 - **Language**: TypeScript
 - **Build**: SSG (Static Site Generation)
 
 ## 📝 記事の追加・更新
 
-1. Notionデータベースに新しい記事を追加
-2. 必要なプロパティを設定（Title, Slug, Excerpt等）
-3. Statusを "Published" に設定
-4. 再ビルドで自動的にサイトに反映
+1. 必要なプロパティを設定（Title, Slug, Excerpt等）
+2. Statusを "Published" に設定
+3. 再ビルドで自動的にサイトに反映
 
 ## 🚀 パフォーマンス最適化
 
