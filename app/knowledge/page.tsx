@@ -103,7 +103,7 @@ export default async function KnowledgePage() {
       <div className="flex flex-col lg:flex-row">
         {/* Left Sidebar */}
         <div className="w-full lg:w-80 lg:flex-shrink-0">
-          <div className="lg:sticky lg:top-24 lg:h-[calc(100vh-6rem)] lg:overflow-y-auto">
+          <div className="lg:sticky lg:top-32 lg:h-[calc(100vh-8rem)] lg:overflow-y-auto">
             <KnowledgeSidebar categories={mdxCategories} />
           </div>
         </div>
@@ -187,7 +187,7 @@ export default async function KnowledgePage() {
 
         {/* Right Sidebar - Table of Contents */}
         <div className="w-full xl:w-80 xl:flex-shrink-0 hidden xl:block">
-          <div className="xl:sticky xl:top-24 xl:h-[calc(100vh-6rem)] xl:overflow-y-auto">
+          <div className="xl:sticky xl:top-32 xl:h-[calc(100vh-8rem)] xl:overflow-y-auto">
             <TableOfContents />
           </div>
         </div>
