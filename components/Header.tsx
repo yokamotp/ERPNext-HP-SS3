@@ -33,10 +33,8 @@ export default function Header() {
     { href: '/', label: 'ホーム', icon: Home },
     { href: '/company', label: '会社案内', icon: Building2 },
     { href: '/erpnext', label: 'ERPNext', icon: Boxes },
-    { href: '/crm', label: 'CRM', icon: Handshake },
-    { href: '/hr-payroll', label: 'HR', icon: IdCard },
     { href: '/pricing', label: '価格', icon: YenIcon },
-    { href: '/knowledge', label: 'ナレッジ記事', icon: BookOpen },
+    { href: '/knowledge', label: 'ドキュメント', icon: BookOpen },
   ];
 
   return (
