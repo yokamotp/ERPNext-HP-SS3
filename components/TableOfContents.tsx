@@ -123,8 +123,7 @@ export default function TableOfContents({ className = '' }: TableOfContentsProps
                   ${level === 2 ? 'font-medium' : 'font-normal'}
                 `}
                 style={{
-                  paddingLeft: `${(level - 2) * 16 + 12}px`,
-                  borderLeft: level > 2 ? '2px solid #e5e7eb' : 'none'
+                  paddingLeft: `${(level - 2) * 16 + 12}px`
                 }}
               >
                 <div className="flex items-center">
