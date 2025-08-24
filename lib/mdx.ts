@@ -8,6 +8,16 @@ export interface MDXArticle {
   description: string;
   category: string;
   path: string;
+  // メタ情報を追加
+  author?: string;
+  publishDate?: string;
+  lastModified?: string;
+  readTime?: string;
+  tags?: string[];
+  isPopular?: boolean;
+  isRecommended?: boolean;
+  difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  status?: 'draft' | 'published' | 'archived';
 }
 
 export interface MDXCategory {
@@ -31,11 +41,22 @@ export function getMDXArticles(): MDXCategory[] {
         title: data.title || file.replace('.mdx', ''),
         description: data.description || '',
         category: '基本',
-        path: filePath
+        path: filePath,
+        author: data.author || '',
+        publishDate: data.publishDate || '',
+        lastModified: data.lastModified || '',
+        readTime: data.readTime || '15分',
+        tags: data.tags || [],
+        isPopular: data.isPopular || false,
+        isRecommended: data.isRecommended || false,
+        difficulty: data.difficulty || 'beginner',
+        status: data.status || 'published'
       };
     });
 
   if (rootFiles.length > 0) {
+    // ファイル名でソート（数字プレフィックス順）
+    rootFiles.sort((a, b) => a.slug.localeCompare(b.slug));
     categories.push({
       name: '基本',
       articles: rootFiles
@@ -60,11 +81,22 @@ export function getMDXArticles(): MDXCategory[] {
           title: data.title || file.replace('.mdx', ''),
           description: data.description || '',
           category: subdir,
-          path: filePath
+          path: filePath,
+          author: data.author || '',
+          publishDate: data.publishDate || '',
+          lastModified: data.lastModified || '',
+          readTime: data.readTime || '15分',
+          tags: data.tags || [],
+          isPopular: data.isPopular || false,
+          isRecommended: data.isRecommended || false,
+          difficulty: data.difficulty || 'beginner',
+          status: data.status || 'published'
         };
       });
 
     if (files.length > 0) {
+      // ファイル名でソート（数字プレフィックス順）
+      files.sort((a, b) => a.slug.localeCompare(b.slug));
       categories.push({
         name: getCategoryDisplayName(subdir),
         articles: files

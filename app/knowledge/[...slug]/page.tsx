@@ -199,6 +199,19 @@ export default async function ArticlePage({ params }: Props) {
   const category = slug.length > 1 ? slug[0] : '基本';
   const categoryDisplayName = getCategoryDisplayName(category);
 
+  const getDifficultyLabel = (difficulty: string) => {
+    switch (difficulty) {
+      case 'beginner':
+        return '初心者向け';
+      case 'intermediate':
+        return '中級者向け';
+      case 'advanced':
+        return '上級者向け';
+      default:
+        return difficulty;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -247,15 +260,67 @@ export default async function ArticlePage({ params }: Props) {
                 )}
 
                 <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-6">
+                  {mdxArticle.data.publishDate && (
+                    <div className="flex items-center">
+                      <Calendar className="w-4 h-4 mr-2" />
+                      {new Date(mdxArticle.data.publishDate).toLocaleDateString('ja-JP', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                      })}
+                    </div>
+                  )}
                   <div className="flex items-center">
                     <Clock className="w-4 h-4 mr-2" />
-                    15分
+                    {mdxArticle.data.readTime || '15分'}
                   </div>
+                  {mdxArticle.data.author && (
+                    <div className="flex items-center">
+                      <span className="mr-2">👤</span>
+                      {mdxArticle.data.author}
+                    </div>
+                  )}
+                  {mdxArticle.data.difficulty && (
+                    <div className="flex items-center">
+                      <span className="mr-2">📊</span>
+                      {getDifficultyLabel(mdxArticle.data.difficulty)}
+                    </div>
+                  )}
                   <button className="flex items-center hover:text-orange-600 transition-colors">
                     <Share2 className="w-4 h-4 mr-2" />
                     シェア
                   </button>
                 </div>
+
+                {mdxArticle.data.tags && mdxArticle.data.tags.length > 0 && (
+                  <div className="flex items-center space-x-2 mb-6">
+                    <Tag className="w-4 h-4 text-gray-400" />
+                    <div className="flex flex-wrap gap-2">
+                      {mdxArticle.data.tags.map((tag: string) => (
+                        <span
+                          key={tag}
+                          className="inline-block px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {mdxArticle.data.isPopular && (
+                  <div className="flex items-center space-x-2 mb-6">
+                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                    <span className="text-sm text-yellow-600 font-medium">人気記事</span>
+                  </div>
+                )}
+
+                {mdxArticle.data.isRecommended && (
+                  <div className="flex items-center space-x-2 mb-6">
+                    <span className="text-2xl">⭐</span>
+                    <span className="text-sm text-orange-600 font-medium">おすすめ記事</span>
+                  </div>
+                )}
               </header>
 
               {/* Article Content */}
