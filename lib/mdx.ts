@@ -78,14 +78,11 @@ export function getMDXArticles(): MDXCategory[] {
 export function getMDXArticleBySlug(slug: string): { data: any; content: string } | null {
   try {
     const knowledgeDir = path.join(process.cwd(), 'content/knowledge');
-    console.log('Looking for slug:', slug);
-    console.log('Knowledge directory:', knowledgeDir);
 
     // ルートディレクトリのファイルをチェック
     const rootPath = path.join(knowledgeDir, `${slug}.mdx`);
-    console.log('Checking root path:', rootPath);
+
     if (fs.existsSync(rootPath)) {
-      console.log('Found file at root path');
       const fileContent = fs.readFileSync(rootPath, 'utf8');
       const { data, content } = matter(fileContent);
       return { data, content };
@@ -95,17 +92,15 @@ export function getMDXArticleBySlug(slug: string): { data: any; content: string 
     const subdirs = fs.readdirSync(knowledgeDir, { withFileTypes: true })
       .filter(dirent => dirent.isDirectory())
       .map(dirent => dirent.name);
-    console.log('Subdirectories found:', subdirs);
 
     for (const subdir of subdirs) {
       // slugがsubdirで始まる場合（例: "customization/develop-app"）
       if (slug.startsWith(`${subdir}/`)) {
         const fileName = slug.substring(subdir.length + 1); // "+1"は"/"をスキップ
         const filePath = path.join(knowledgeDir, subdir, `${fileName}.mdx`);
-        console.log(`Checking subdir ${subdir}, fileName: ${fileName}, filePath: ${filePath}`);
 
         if (fs.existsSync(filePath)) {
-          console.log(`Found file at subdir path: ${filePath}`);
+
           const fileContent = fs.readFileSync(filePath, 'utf8');
           const { data, content } = matter(fileContent);
           return { data, content };
@@ -113,7 +108,6 @@ export function getMDXArticleBySlug(slug: string): { data: any; content: string 
       }
     }
 
-    console.log('No file found for slug:', slug);
     return null;
   } catch (error) {
     console.error('Error reading MDX file:', error);

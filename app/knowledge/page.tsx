@@ -32,9 +32,6 @@ export default async function KnowledgePage() {
 
   const mdxCategories = getMDXArticles();
 
-  // デバッグ用: MDXデータの確認
-  console.log('MDX Categories:', JSON.stringify(mdxCategories, null, 2));
-
   // 「はじめに」の記事を取得
   const introductionArticle = mdxCategories
     .flatMap(category => category.articles)

@@ -3,10 +3,10 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // フォームデータの検証
     const { name, email, company, requestTypes, message } = body;
-    
+
     if (!name || !email) {
       return NextResponse.json(
         { error: '必須項目が入力されていません' },
@@ -23,23 +23,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // フォームデータをログに出力（開発用）
-    console.log('Contact form submission:', {
-      name,
-      email,
-      company,
-      requestTypes,
-      message,
-      timestamp: new Date().toISOString()
-    });
-
     // TODO: 実際のメール送信処理
     // 本番環境では以下のような外部サービスを使用してメール送信を実装してください：
     // - SendGrid
     // - Mailgun  
     // - Amazon SES
     // - Nodemailer + SMTP
-    
+
     /*
     例：SendGridを使用した場合
     
@@ -66,9 +56,9 @@ export async function POST(request: NextRequest) {
 
     // 成功レスポンス
     return NextResponse.json(
-      { 
+      {
         message: 'お問い合わせを受け付けました',
-        success: true 
+        success: true
       },
       { status: 200 }
     );
