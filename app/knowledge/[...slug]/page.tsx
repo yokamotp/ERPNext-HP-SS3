@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { getMDXArticleBySlug, getAllMDXSlugs, getMDXArticles } from '@/lib/mdx';
+import { getMDXArticleBySlug, getAllMDXSlugs, getMDXArticles, getBreadcrumbItems } from '@/lib/mdx';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import KnowledgeSidebar from '@/components/KnowledgeSidebar';
@@ -230,13 +230,18 @@ export default async function ArticlePage({ params }: Props) {
             {/* Breadcrumb */}
             <nav className="mb-8">
               <ol className="flex items-center space-x-2 text-sm text-gray-600">
-                <li>
-                  <Link href="/knowledge" className="hover:text-orange-600">
-                    ナレッジ
-                  </Link>
-                </li>
-                <li>/</li>
-                <li className="text-gray-900">{mdxArticle.data.title}</li>
+                {getBreadcrumbItems(slug.join('/')).map((item, index) => (
+                  <li key={item.href} className="flex items-center">
+                    {index > 0 && <span className="mx-2 text-gray-400">/</span>}
+                    {index === getBreadcrumbItems(slug.join('/')).length - 1 ? (
+                      <span className="text-gray-900">{item.name}</span>
+                    ) : (
+                      <Link href={item.href} className="hover:text-orange-600">
+                        {item.name}
+                      </Link>
+                    )}
+                  </li>
+                ))}
               </ol>
             </nav>
 
@@ -260,38 +265,21 @@ export default async function ArticlePage({ params }: Props) {
                 )}
 
                 <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-6">
-                  {mdxArticle.data.publishDate && (
+                  <div className="flex items-center">
+                    <Clock className="w-4 h-4 mr-2" />
+                    {mdxArticle.data.readTime || '15分'}
+                  </div>
+                  {mdxArticle.data.lastModified && (
                     <div className="flex items-center">
                       <Calendar className="w-4 h-4 mr-2" />
-                      {new Date(mdxArticle.data.publishDate).toLocaleDateString('ja-JP', {
+                      最終更新: {new Date(mdxArticle.data.lastModified).toLocaleDateString('ja-JP', {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
                       })}
                     </div>
                   )}
-                  <div className="flex items-center">
-                    <Clock className="w-4 h-4 mr-2" />
-                    {mdxArticle.data.readTime || '15分'}
-                  </div>
-                  {mdxArticle.data.author && (
-                    <div className="flex items-center">
-                      <span className="mr-2">👤</span>
-                      {mdxArticle.data.author}
-                    </div>
-                  )}
-                  {mdxArticle.data.difficulty && (
-                    <div className="flex items-center">
-                      <span className="mr-2">📊</span>
-                      {getDifficultyLabel(mdxArticle.data.difficulty)}
-                    </div>
-                  )}
-                  <button className="flex items-center hover:text-orange-600 transition-colors">
-                    <Share2 className="w-4 h-4 mr-2" />
-                    シェア
-                  </button>
                 </div>
-
                 {mdxArticle.data.tags && mdxArticle.data.tags.length > 0 && (
                   <div className="flex items-center space-x-2 mb-6">
                     <Tag className="w-4 h-4 text-gray-400" />
@@ -305,20 +293,6 @@ export default async function ArticlePage({ params }: Props) {
                         </span>
                       ))}
                     </div>
-                  </div>
-                )}
-
-                {mdxArticle.data.isPopular && (
-                  <div className="flex items-center space-x-2 mb-6">
-                    <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                    <span className="text-sm text-yellow-600 font-medium">人気記事</span>
-                  </div>
-                )}
-
-                {mdxArticle.data.isRecommended && (
-                  <div className="flex items-center space-x-2 mb-6">
-                    <span className="text-2xl">⭐</span>
-                    <span className="text-sm text-orange-600 font-medium">おすすめ記事</span>
                   </div>
                 )}
               </header>
@@ -338,13 +312,6 @@ export default async function ArticlePage({ params }: Props) {
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     ナレッジ一覧に戻る
                   </Link>
-
-                  <div className="flex items-center space-x-4">
-                    <button className="flex items-center text-gray-600 hover:text-orange-600 transition-colors">
-                      <Share2 className="w-4 h-4 mr-2" />
-                      シェア
-                    </button>
-                  </div>
                 </div>
               </footer>
             </article>

@@ -18,6 +18,7 @@ export interface MDXArticle {
   isRecommended?: boolean;
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
   status?: 'draft' | 'published' | 'archived';
+  order?: number; // 表示順序を制御するための属性
 }
 
 export interface MDXCategory {
@@ -50,13 +51,14 @@ export function getMDXArticles(): MDXCategory[] {
         isPopular: data.isPopular || false,
         isRecommended: data.isRecommended || false,
         difficulty: data.difficulty || 'beginner',
-        status: data.status || 'published'
+        status: data.status || 'published',
+        order: data.order || 999 // order属性がない場合は最後に表示
       };
     });
 
   if (rootFiles.length > 0) {
-    // ファイル名でソート（数字プレフィックス順）
-    rootFiles.sort((a, b) => a.slug.localeCompare(b.slug));
+    // order属性の値でソート（小さい順）
+    rootFiles.sort((a, b) => (a.order || 999) - (b.order || 999));
     categories.push({
       name: '基本',
       articles: rootFiles
@@ -90,13 +92,14 @@ export function getMDXArticles(): MDXCategory[] {
           isPopular: data.isPopular || false,
           isRecommended: data.isRecommended || false,
           difficulty: data.difficulty || 'beginner',
-          status: data.status || 'published'
+          status: data.status || 'published',
+          order: data.order || 999 // order属性がない場合は最後に表示
         };
       });
 
     if (files.length > 0) {
-      // ファイル名でソート（数字プレフィックス順）
-      files.sort((a, b) => a.slug.localeCompare(b.slug));
+      // order属性の値でソート（小さい順）
+      files.sort((a, b) => (a.order || 999) - (b.order || 999));
       categories.push({
         name: getCategoryDisplayName(subdir),
         articles: files
