@@ -15,7 +15,8 @@ import {
   Tag,
   ArrowRight,
   Search,
-  Filter
+  Filter,
+  Calendar
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -37,61 +38,6 @@ export default async function KnowledgePage() {
     .flatMap(category => category.articles)
     .find(article => article.slug === 'introduction');
 
-  // const latestArticles = articles.sort((a, b) =>
-  //   new Date(b.publishDate).getTime() - new Date(a.publishDate).getTime()
-  // );
-
-  // const popularArticles = articles.filter(article => article.isPopular);
-  // const recommendedArticles = articles.filter(article => article.isRecommended);
-
-  // const categories = ['最新記事', '人気記事', 'おすすめシリーズ', 'カテゴリ別'];
-
-  // const ArticleCard = ({ article }: { article: Article }) => (
-  //   <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
-  //     <div className="flex items-start justify-between mb-3">
-  //       <div className="flex items-center space-x-2">
-  //         <span className="inline-block px-3 py-1 text-xs font-medium bg-orange-100 text-orange-700 rounded-full">
-  //           {article.category}
-  //         </span>
-  //         {article.isRecommended && (
-  //           <Star className="w-4 h-4 text-yellow-500 fill-current" />
-  //         )}
-  //       </div>
-  //       <div className="flex items-center text-xs text-gray-500">
-  //         <Clock className="w-3 h-3 mr-1" />
-  //         {article.readTime}
-  //       </div>
-  //     </div>
-
-  //     <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-orange-600 transition-colors">
-  //       <Link href={`/knowledge/${article.slug}`}>
-  //         {article.title}
-  //       </Link>
-  //     </h3>
-
-  //     <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-  //       {article.excerpt}
-  //     </p>
-
-  //     <div className="flex items-center justify-between">
-  //       <div className="flex items-center space-x-2">
-  //         {article.tags.map((tag) => (
-  //           <span key={tag} className="inline-flex items-center text-xs text-gray-500">
-  //             <Tag className="w-3 h-3 mr-1" />
-  //             {tag}
-  //           </span>
-  //         ))}
-  //       </div>
-  //       <Link
-  //         href={`/knowledge/${article.slug}`}
-  //         className="inline-flex items-center text-sm text-orange-600 hover:text-orange-700 font-medium"
-  //       >
-  //         続きを読む
-  //         <ArrowRight className="w-4 h-4 ml-1" />
-  //       </Link>
-  //     </div>
-  //   </div>
-  // );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -107,79 +53,100 @@ export default async function KnowledgePage() {
 
         {/* Main Content */}
         <main className="flex-1 min-w-0">
-
-
-          {/* Content Sections */}
           <div className="container-width section-padding py-12">
-            {/* Introduction Article Section */}
+            {/* Breadcrumb */}
+            <nav className="mb-8">
+              <ol className="flex items-center space-x-2 text-sm text-gray-600">
+                <li className="text-gray-900">ナレッジ</li>
+              </ol>
+            </nav>
+
+            {/* Introduction Article */}
             {introductionArticle && (
-              <section id="introduction" className="mb-16 scroll-mt-32">
-                <div className="bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
-                  <div className="flex items-center space-x-2 mb-6">
-                    <BookOpen className="w-6 h-6 text-orange-500" />
-                    <span className="text-sm font-medium text-orange-700 bg-orange-50 px-3 py-1 rounded-full">
+              <section className="mb-12">
+                <div className="bg-white rounded-lg border border-gray-200 p-8">
+                  <div className="flex items-center space-x-2 mb-4">
+                    <span className="inline-block px-3 py-1 text-xs font-medium bg-orange-100 text-orange-700 rounded-full">
                       基本
                     </span>
                   </div>
 
-                  <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                  <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight mb-6">
                     {introductionArticle.title}
-                  </h2>
+                  </h1>
 
-                  <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                    {introductionArticle.description}
-                  </p>
-
-                  <div className="prose prose-lg max-w-none text-gray-700">
-                    <p className="mb-4">
-                      このガイドは、ERPNextの導入から活用まで、段階的に学べる実践的な情報を提供することを目的としています。中小企業から大企業まで、幅広い規模の企業で活用できるERPNextの魅力と実用性を、実際の業務フローに沿って解説していきます。
+                  {introductionArticle.description && (
+                    <p className="text-xl text-gray-600 mb-6 leading-relaxed">
+                      {introductionArticle.description}
                     </p>
+                  )}
 
-                    <h3 className="text-xl font-semibold text-gray-900 mb-3">このガイドの構成</h3>
-                    <ul className="space-y-2 mb-6">
-                      <li><strong>基本セクション</strong>: ERPNextとは？、基本的な操作方法、ユーザー管理の基本</li>
-                      <li><strong>ERPの比較セクション</strong>: 他ERPとの比較、コスト分析、機能比較表</li>
-                      <li><strong>チュートリアルセクション</strong>: 売上管理、購買管理、在庫管理の流れ</li>
-                      <li><strong>カスタマイズセクション</strong>: カスタムフィールド、スクリプト、アプリ開発</li>
-                      <li><strong>導入セクション</strong>: 導入計画、データ移行、ユーザー研修</li>
-                    </ul>
-
-                    <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
-                      <p className="text-blue-800">
-                        <strong>学習のポイント:</strong> 理論だけでなく、実際の画面操作を重視し、実際の業務フローに沿った学習を提供します。
-                      </p>
+                  <div className="flex flex-wrap items-center gap-6 text-sm text-gray-500 mb-6">
+                    <div className="flex items-center">
+                      <Clock className="w-4 h-4 mr-2" />
+                      {introductionArticle.readTime || '15分'}
                     </div>
+                    {introductionArticle.lastModified && (
+                      <div className="flex items-center">
+                        <Calendar className="w-4 h-4 mr-2" />
+                        最終更新: {new Date(introductionArticle.lastModified).toLocaleDateString('ja-JP', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </div>
+                    )}
                   </div>
 
-                  <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-                    <div className="flex items-center space-x-4 text-sm text-gray-500">
-                      <span className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        15分
-                      </span>
-                      <span>基本</span>
-                    </div>
-                    <Link
-                      href={`/knowledge/${introductionArticle.slug}`}
-                      className="inline-flex items-center text-orange-600 hover:text-orange-700 font-medium"
-                    >
-                      詳しく読む
-                      <ArrowRight className="w-4 h-4 ml-1" />
-                    </Link>
-                  </div>
+                  <Link
+                    href={`/knowledge/${introductionArticle.slug}`}
+                    className="inline-flex items-center text-orange-600 hover:text-orange-700 font-medium"
+                  >
+                    続きを読む
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Link>
                 </div>
               </section>
             )}
 
-            {/* Tab Navigation */}
-            <KnowledgeTabNavigation />
-
-            {/*  */}
-
-
+            {/* Categories Overview */}
+            <section className="mb-12">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">カテゴリ別記事</h2>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {mdxCategories.map((category) => (
+                  <div key={category.name} className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">{category.name}</h3>
+                    <p className="text-gray-600 text-sm mb-4">
+                      {category.articles.length}件の記事
+                    </p>
+                    <div className="space-y-2 mb-4">
+                      {category.articles.slice(0, 3).map((article) => (
+                        <Link
+                          key={article.slug}
+                          href={`/knowledge/${article.slug}`}
+                          className="block text-sm text-gray-700 hover:text-orange-600 transition-colors"
+                        >
+                          • {article.title}
+                        </Link>
+                      ))}
+                      {category.articles.length > 3 && (
+                        <span className="text-xs text-gray-500">
+                          他 {category.articles.length - 3}件
+                        </span>
+                      )}
+                    </div>
+                    <Link
+                      href={`/knowledge/${category.name === '基本' ? 'introduction' : `${category.name.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-')}/index`}`}
+                      className="inline-flex items-center text-sm text-orange-600 hover:text-orange-700 font-medium"
+                    >
+                      カテゴリを見る
+                      <ArrowRight className="w-4 h-4 ml-1" />
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </section>
           </div>
-
-
         </main>
 
         {/* Right Sidebar - Table of Contents */}

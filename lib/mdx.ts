@@ -179,7 +179,44 @@ function getCategoryDisplayName(dirName: string): string {
     'customization': 'カスタマイズ',
     'tutorial': 'チュートリアル',
     'implementation': '導入',
-    'basic-operations': '基本操作'
+    'basic-operations': '基本操作',
+    '01basic': 'はじめに'
+
   };
   return nameMap[dirName] || dirName;
+}
+
+// 階層的なパンくずリストを生成する関数
+export function getBreadcrumbItems(slug: string): Array<{ name: string; href: string }> {
+  const items = [
+    { name: 'ナレッジ', href: '/knowledge' }
+  ];
+
+  // ルートディレクトリのファイルの場合
+  if (!slug.includes('/')) {
+    return items;
+  }
+
+  // サブディレクトリのファイルの場合
+  const parts = slug.split('/');
+  const category = parts[0];
+  const categoryDisplayName = getCategoryDisplayName(category);
+
+  // カテゴリのデフォルト記事へのリンク
+  items.push({
+    name: categoryDisplayName,
+    href: `/knowledge/${category}/index`
+  });
+
+  // ファイル名がindexでない場合、ファイル名も追加
+  if (parts[1] && parts[1] !== 'index') {
+    // ファイルのタイトルを取得（簡易版）
+    const fileName = parts[1];
+    items.push({
+      name: fileName,
+      href: `/knowledge/${slug}`
+    });
+  }
+
+  return items;
 }
