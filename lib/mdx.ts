@@ -189,6 +189,41 @@ function getCategoryDisplayName(dirName: string): string {
   return nameMap[dirName] || dirName;
 }
 
+// slugから記事のタイトルを取得するヘルパー関数
+function getArticleTitleBySlug(slug: string): string {
+  try {
+    const knowledgeDir = path.join(process.cwd(), 'content/knowledge');
+
+    // ルートディレクトリのファイルの場合
+    if (!slug.includes('/')) {
+      const filePath = path.join(knowledgeDir, `${slug}.mdx`);
+      if (fs.existsSync(filePath)) {
+        const fileContent = fs.readFileSync(filePath, 'utf8');
+        const { data } = matter(fileContent);
+        return data.title || slug;
+      }
+      return slug;
+    }
+
+    // サブディレクトリのファイルの場合
+    const parts = slug.split('/');
+    const subdir = parts[0];
+    const fileName = parts[1];
+    const filePath = path.join(knowledgeDir, subdir, `${fileName}.mdx`);
+
+    if (fs.existsSync(filePath)) {
+      const fileContent = fs.readFileSync(filePath, 'utf8');
+      const { data } = matter(fileContent);
+      return data.title || fileName;
+    }
+
+    return fileName || slug;
+  } catch (error) {
+    console.error('Error getting article title:', error);
+    return slug;
+  }
+}
+
 // 階層的なパンくずリストを生成する関数
 export function getBreadcrumbItems(slug: string): Array<{ name: string; href: string }> {
   const items = [
@@ -197,6 +232,11 @@ export function getBreadcrumbItems(slug: string): Array<{ name: string; href: st
 
   // ルートディレクトリのファイルの場合
   if (!slug.includes('/')) {
+    const title = getArticleTitleBySlug(slug);
+    items.push({
+      name: title,
+      href: `/knowledge/${slug}`
+    });
     return items;
   }
 
@@ -213,10 +253,10 @@ export function getBreadcrumbItems(slug: string): Array<{ name: string; href: st
 
   // ファイル名がindexでない場合、ファイル名も追加
   if (parts[1] && parts[1] !== 'index') {
-    // ファイルのタイトルを取得（簡易版）
-    const fileName = parts[1];
+    // 記事のタイトルを取得
+    const title = getArticleTitleBySlug(slug);
     items.push({
-      name: fileName,
+      name: title,
       href: `/knowledge/${slug}`
     });
   }
